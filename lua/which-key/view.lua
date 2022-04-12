@@ -32,29 +32,18 @@ function M.show()
     return
   end
 
-  -- non-floating windows
-  local wins = vim.tbl_filter(function(w)
-    return vim.api.nvim_win_is_valid(w) and vim.api.nvim_win_get_config(w).relative == ""
-  end, vim.api.nvim_list_wins())
-
-  ---@type number[]
-  local margins = {}
-  for i, m in ipairs(config.options.window.margin) do
-    if m > 0 and m < 1 then
-      if i % 2 == 0 then
-        m = math.floor(vim.o.columns * m)
-      else
-        m = math.floor(vim.o.lines * m)
-      end
-    end
-    margins[i] = m
+  local width = vim.o.columns
+  if type(config.options.window.width) == "number" then
+      width = config.options.window.width
+  elseif type(config.options.window.width) == "function" then
+      width = config.options.window.width()
   end
 
   local opts = {
     relative = "editor",
-    width = vim.o.columns
-      - margins[2]
-      - margins[4]
+    width = width
+      - config.options.window.margin[2]
+      - config.options.window.margin[4]
       - (vim.fn.has("nvim-0.6") == 0 and config.options.window.border ~= "none" and 2 or 0),
     height = config.options.layout.height.min,
     focusable = false,
@@ -73,6 +62,10 @@ function M.show()
   if config.options.window.position == "top" then
     opts.anchor = "NW"
     opts.row = margins[1]
+  end
+  if config.options.window.align == "right" then
+      opts.anchor = "NW"
+      opts.col = vim.o.columns - opts.width - config.options.window.margin[2]
   end
   M.buf = vim.api.nvim_create_buf(false, true)
   M.win = vim.api.nvim_open_win(M.buf, false, opts)
