@@ -34,9 +34,9 @@ function M.show()
 
   local width = vim.o.columns
   if type(config.options.window.width) == "number" then
-      width = config.options.window.width
+    width = config.options.window.width
   elseif type(config.options.window.width) == "function" then
-      width = config.options.window.width()
+    width = config.options.window.width()
   end
 
   local opts = {
@@ -64,8 +64,7 @@ function M.show()
     opts.row = margins[1]
   end
   if config.options.window.align == "right" then
-      opts.anchor = "NW"
-      opts.col = vim.o.columns - opts.width - config.options.window.margin[2]
+    opts.col = vim.o.columns - opts.width - config.options.window.margin[2]
   end
   M.buf = vim.api.nvim_create_buf(false, true)
   M.win = vim.api.nvim_open_win(M.buf, false, opts)
