@@ -50,18 +50,18 @@ function M.show()
     anchor = "SW",
     border = config.options.window.border,
     row = vim.o.lines
-      - margins[3]
+      - config.options.window.margin[3]
       - (vim.fn.has("nvim-0.6") == 0 and config.options.window.border ~= "none" and 2 or 0)
       + ((vim.o.laststatus == 0 or vim.o.laststatus == 1 and #wins == 1) and 1 or 0)
       - vim.o.cmdheight,
-    col = margins[4],
+    col = config.options.window.margin[4],
     style = "minimal",
     noautocmd = true,
     zindex = config.options.window.zindex,
   }
   if config.options.window.position == "top" then
     opts.anchor = "NW"
-    opts.row = margins[1]
+    opts.row = config.options.window.margin[1]
   end
   if config.options.window.align == "right" then
     opts.col = vim.o.columns - opts.width - config.options.window.margin[2]
